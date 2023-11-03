@@ -18,6 +18,13 @@ describe("PetAdoption", function () {
 
       expect(await contract.owner()).to.equal(owner.address);
     });
+
+    it("getOwner() should return the right owner", async function () {
+      const { owner, contract } = await deployContract();
+      const contractOwner = await contract.getOwner();
+
+      expect(await contract.owner()).to.equal(owner.address);
+    });
   });
 });
 
