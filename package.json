@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-viem": "^1.0.0",
     "hardhat": "^2.19.0"
   }
 }
