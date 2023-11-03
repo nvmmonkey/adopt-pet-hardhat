@@ -3,13 +3,14 @@ const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 
 describe("PetAdoption", function () {
   async function deployContractFixture() {
+    const PETS_COUNT = 5;
     const [owner, account2] = await ethers.getSigners();
     const PetAdoption = await ethers.getContractFactory("PetAdoption");
-    const contract = await PetAdoption.deploy();
+    const contract = await PetAdoption.deploy(PETS_COUNT);
 
     const randomNum = Math.random();
 
-    return { owner, account2, contract, randomNum };
+    return { owner, account2, contract, randomNum, petsAddedCount: PETS_COUNT };
   }
 
   describe("Deployment", function () {
@@ -40,13 +41,21 @@ describe("PetAdoption", function () {
 
   describe("Add Pet", function () {
     it("Should revert with the right error in case of other account", async function () {
-      const { owner, contract, account2 } = await loadFixture(
-        deployContractFixture
-      );
+      const { contract, account2 } = await loadFixture(deployContractFixture);
 
       await expect(contract.connect(account2).addPet()).to.be.revertedWith(
         "Only a contract owner can add a new pet!"
       );
+    });
+
+    it("Should increase pet index", async function () {
+      const { contract, petsAddedCount } = await loadFixture(
+        deployContractFixture
+      );
+
+      await contract.addPet();
+
+      expect(await contract.petIndex()).to.equal(petsAddedCount + 1);
     });
   });
 });
