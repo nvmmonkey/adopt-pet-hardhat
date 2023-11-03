@@ -99,6 +99,10 @@ describe("PetAdoption", function () {
       const idx = 1;
 
       await expect(contract.connect(account2).adoptPet(idx)).not.to.be.reverted;
+
+      const petOwnerAddress = await contract.petIdxToOwnerAddress(idx);
+
+      expect(petOwnerAddress).to.equal(account2.address);
     });
   });
 });
