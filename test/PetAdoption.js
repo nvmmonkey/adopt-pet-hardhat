@@ -4,13 +4,24 @@ const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 describe("PetAdoption", function () {
   async function deployContractFixture() {
     const PETS_COUNT = 5;
-    const [owner, account2] = await ethers.getSigners();
+    const ADOPTED_PET_IDX = 0;
+    const [owner, account2, account3] = await ethers.getSigners();
     const PetAdoption = await ethers.getContractFactory("PetAdoption");
     const contract = await PetAdoption.deploy(PETS_COUNT);
 
+    await contract.connect(account3).adoptPet(ADOPTED_PET_IDX);
+
     const randomNum = Math.random();
 
-    return { owner, account2, contract, randomNum, petsAddedCount: PETS_COUNT };
+    return {
+      owner,
+      account2,
+      account3,
+      contract,
+      randomNum,
+      petsAddedCount: PETS_COUNT,
+      adoptedPetIdx: ADOPTED_PET_IDX,
+    };
   }
 
   describe("Deployment", function () {
@@ -67,10 +78,20 @@ describe("PetAdoption", function () {
 
       await expect(contract.adoptPet(petsAddedCount)).to.be.revertedWith(
         "Pet index out of bounds!"
-      ); 
-      await expect(contract.adoptPet(-1)).to.be.rejectedWith("value out-of-bounds ")
+      );
+      await expect(contract.adoptPet(-1)).to.be.rejectedWith(
+        "value out-of-bounds "
+      );
+    });
 
+    it("Should revert with pet is already adopted", async function () {
+      const { contract, adoptedPetIdx } = await loadFixture(
+        deployContractFixture
+      );
 
+      await expect(contract.adoptPet(adoptedPetIdx)).to.be.revertedWith(
+        "Pet is already adopted!"
+      );
     });
   });
 });
