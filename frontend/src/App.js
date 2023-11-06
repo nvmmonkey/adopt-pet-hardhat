@@ -5,7 +5,7 @@ import { TxError } from "./components/TxError";
 import { WalletNotDetected } from "./components/WalletNotDetected";
 import { useState, useEffect } from "react";
 
-const HARDHAT_NETWORK_ID = 31337;
+const HARDHAT_NETWORK_ID = process.env.REACT_APP_NETWORK_ID 
 
 function App() {
   const [pets, setPets] = useState([]);
