@@ -1,3 +1,4 @@
+import { ConnectWallet } from "./components/ConnectWallet";
 import { Navbar } from "./components/Navbar";
 import { PetItem } from "./components/PetItem";
 import { TxError } from "./components/TxError";
@@ -6,6 +7,7 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [pets, setPets] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(undefined);
 
   useEffect(() => {
     async function fetchPets() {
@@ -20,6 +22,11 @@ function App() {
   if (window.ethereum === undefined) {
     return <WalletNotDetected />;
   }
+
+  if (selectedAddress === undefined) {
+    return <ConnectWallet />;
+  }
+
   return (
     <div className="container">
       <TxError />
