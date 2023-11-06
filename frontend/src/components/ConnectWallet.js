@@ -1,9 +1,11 @@
-export function ConnectWallet() {
+export function ConnectWallet({ connect }) {
   return (
     <div className="container">
       <div>Please, connect to wallet to enter the application</div>
       <br />
-      <button className="action-button">Connect to Wallet</button>
+      <button onClick={connect} className="action-button">
+        Connect to Wallet
+      </button>
     </div>
   );
 }
