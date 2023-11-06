@@ -1,6 +1,7 @@
 import { Navbar } from "./components/Navbar";
 import { PetItem } from "./components/PetItem";
 import { TxError } from "./components/TxError";
+import { WalletNotDetected } from "./components/WalletNotDetected";
 import { useState, useEffect } from "react";
 
 function App() {
@@ -16,6 +17,9 @@ function App() {
     fetchPets();
   }, []);
 
+  if (window.ethereum === undefined) {
+    return <WalletNotDetected />;
+  }
   return (
     <div className="container">
       <TxError />
@@ -24,7 +28,7 @@ function App() {
 
       <div className="items">
         {pets.map((pet) => (
-          <PetItem key={pet.id} pet={pet}/>
+          <PetItem key={pet.id} pet={pet} />
         ))}
       </div>
     </div>
