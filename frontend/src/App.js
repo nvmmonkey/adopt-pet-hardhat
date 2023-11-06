@@ -5,6 +5,8 @@ import { TxError } from "./components/TxError";
 import { WalletNotDetected } from "./components/WalletNotDetected";
 import { useState, useEffect } from "react";
 
+const HARDHAT_NETWORK_ID = 31337;
+
 function App() {
   const [pets, setPets] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(undefined);
@@ -24,10 +26,23 @@ function App() {
       const [address] = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
+
+      await checkNetwork();
+
       setSelectedAddress(address);
     } catch (e) {
       console.error(e.message);
     }
+  }
+
+  async function checkNetwork() {
+    alert(window.ethereum.networkVersion);
+
+    if (window.ethereum.networkVersion !== HARDHAT_NETWORK_ID.toString()) {
+      alert("Switching to Hardhat!");
+      return;
+    }
+    alert("Correct Network, dont switch!");
   }
 
   if (!window.ethereum) {
@@ -35,14 +50,14 @@ function App() {
   }
 
   if (!selectedAddress) {
-    return <ConnectWallet connect={connectWallet}/>;
+    return <ConnectWallet connect={connectWallet} />;
   }
 
   return (
     <div className="container">
       <TxError />
       <br />
-      <Navbar address={selectedAddress}/>
+      <Navbar address={selectedAddress} />
 
       <div className="items">
         {pets.map((pet) => (
