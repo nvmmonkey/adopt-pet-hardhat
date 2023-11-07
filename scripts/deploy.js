@@ -1,4 +1,4 @@
-const hre = require("hardhat");
+
 const path = require("path");
 const fs = require("fs");
 
@@ -16,6 +16,34 @@ async function main() {
   await contract.waitForDeployment();
 
   console.log(`PetAdoption deployed to ${contract.target}`);
+
+  saveContractFiles(contract);
+}
+
+function saveContractFiles(contract) {
+  const contractDir = path.join(
+    __dirname,
+    "..",
+    "frontend",
+    "src",
+    "contracts"
+  );
+
+  if (!fs.existsSync(contractDir)) {
+    fs.mkdirSync(contractDir);
+  }
+
+  fs.writeFileSync(
+    path.join(contractDir, `contract-address-${network.name}.json`),
+    JSON.stringify({ PetAdoption: contract.target }, null, 2)
+  );
+
+  const PetAdoptionArtifact = artifacts.readArtifactSync("PetAdoption");
+
+  fs.writeFileSync(
+    path.join(contractDir, "PetAdoption.json"),
+    JSON.stringify(PetAdoptionArtifact, null, 2)
+  );
 }
 
 main().catch((error) => {
