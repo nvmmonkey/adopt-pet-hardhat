@@ -28,8 +28,17 @@ function App() {
       });
 
       await checkNetwork();
-
       setSelectedAddress(address);
+
+      window.ethereum.on("accountsChanged", ([newAddress]) => {
+        if (newAddress === undefined) {
+          setSelectedAddress(undefined);
+          return;
+        }
+        setSelectedAddress(newAddress);
+        //conection to SC
+        //getting owned pets
+      });
     } catch (e) {
       console.error(e.message);
     }
