@@ -27,7 +27,7 @@ export function PetItem({ pet, adoptPet, disabled, inProgress }) {
           onClick={adoptPet}
           className="action-button"
         >
-          {inProgress? "Processing..." : disabled ? "Happily Adopted" : "Adopt"}
+          {disabled ? "Happily Adopted" : "Adopt"}
         </button>
       </div>
     </div>

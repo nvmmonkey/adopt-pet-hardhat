@@ -89,12 +89,20 @@ function App() {
   async function getAdoptedPets(contract) {
     try {
       const adoptedPets = await contract.getAllAdoptedPets();
+      const ownedPets = await contract.getAllAdoptedPetsByOwner();
 
       if (adoptedPets.length > 0) {
         // console.log(adoptedPets);
         setAdoptedPets(adoptedPets.map((petIdx) => Number(petIdx)));
       } else {
         setAdoptedPets([]);
+      }
+
+      if (ownedPets.length > 0) {
+        // console.log(adoptedPets);
+        setOwnedPets(ownedPets.map((petIdx) => Number(petIdx)));
+      } else {
+        setOwnedPets([]);
       }
 
       // console.log(adoptedPets);
@@ -170,7 +178,16 @@ function App() {
                 adoptPet={() => adoptPet(pet.id)}
               />
             ))
-          : JSON.stringify(ownedPets)}
+          : pets
+              .filter((pet) => ownedPets.includes(pet.id))
+              .map((pet) => (
+                <PetItem
+                  key={pet.id}
+                  disabled={true}
+                  pet={pet}
+                  adoptPet={() => {}}
+                />
+              ))}
       </div>
     </div>
   );
