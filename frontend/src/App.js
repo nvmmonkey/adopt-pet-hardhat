@@ -14,6 +14,7 @@ const HARDHAT_NETWORK_ID = Number(process.env.REACT_APP_NETWORK_ID);
 function App() {
   const [pets, setPets] = useState([]);
   const [adoptedPets, setAdoptedPets] = useState([]);
+  const [ownedPets, setOwnedPets] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(undefined);
   const [contract, setContract] = useState(undefined);
   const [txError, setTxError] = useState(undefined);
@@ -47,6 +48,7 @@ function App() {
         if (newAddress === undefined) {
           setTxError(undefined);
           setAdoptedPets([]);
+          setOwnedPets([]);
           setSelectedAddress(undefined);
           setContract(undefined);
           setTxInfo(undefined);
@@ -114,6 +116,7 @@ function App() {
       }
 
       setAdoptedPets([...adoptedPets, id]);
+      setOwnedPets([...ownedPets, id]);
     } catch (e) {
       setTxError(e?.reason);
     } finally {
@@ -153,19 +156,21 @@ function App() {
         <TxError dismiss={() => setTxError(undefined)} message={txError} />
       )}
       <br />
-      {view}
+
       <Navbar setView={setView} address={selectedAddress} />
 
       <div className="items">
-        {pets.map((pet) => (
-          <PetItem
-            inProgress={!!txInfo}
-            key={pet.id}
-            disabled={adoptedPets?.includes(pet.id)}
-            pet={pet}
-            adoptPet={() => adoptPet(pet.id)}
-          />
-        ))}
+        {view === "home"
+          ? pets.map((pet) => (
+              <PetItem
+                inProgress={!!txInfo}
+                key={pet.id}
+                disabled={adoptedPets?.includes(pet.id)}
+                pet={pet}
+                adoptPet={() => adoptPet(pet.id)}
+              />
+            ))
+          : JSON.stringify(ownedPets)}
       </div>
     </div>
   );
