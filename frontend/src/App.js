@@ -142,7 +142,12 @@ function App() {
 
       <div className="items">
         {pets.map((pet) => (
-          <PetItem key={pet.id} pet={pet} adoptPet={() => adoptPet(pet.id)} />
+          <PetItem
+            key={pet.id}
+            disabled={adoptedPets?.includes(pet.id)}
+            pet={pet}
+            adoptPet={() => adoptPet(pet.id)}
+          />
         ))}
       </div>
     </div>
