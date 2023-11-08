@@ -152,6 +152,7 @@ function App() {
       <div className="items">
         {pets.map((pet) => (
           <PetItem
+            inProgress={!!txInfo}
             key={pet.id}
             disabled={adoptedPets?.includes(pet.id)}
             pet={pet}

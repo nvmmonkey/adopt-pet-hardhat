@@ -1,4 +1,4 @@
-export function PetItem({ pet, adoptPet, disabled }) {
+export function PetItem({ pet, adoptPet, disabled, inProgress }) {
   return (
     <div className="item">
       <div className="image">
@@ -23,11 +23,11 @@ export function PetItem({ pet, adoptPet, disabled }) {
       </div>
       <div className="action-menu">
         <button
-          disabled={disabled}
+          disabled={disabled || inProgress}
           onClick={adoptPet}
           className="action-button"
         >
-          {disabled ? "Adopted" : "Adopt"}
+          {inProgress? "Processing..." : disabled ? "Happily Adopted" : "Adopt"}
         </button>
       </div>
     </div>
