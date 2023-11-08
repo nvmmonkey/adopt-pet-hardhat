@@ -28,20 +28,29 @@ function App() {
       });
 
       await checkNetwork();
-      setSelectedAddress(address);
+      initializeApp(address);
 
       window.ethereum.on("accountsChanged", ([newAddress]) => {
         if (newAddress === undefined) {
           setSelectedAddress(undefined);
           return;
         }
-        setSelectedAddress(newAddress);
+        initializeApp(newAddress);
         //conection to SC
         //getting owned pets
       });
     } catch (e) {
       console.error(e.message);
     }
+  }
+
+  async function initializeApp(address) {
+    setSelectedAddress(address);
+    const contract = await initContract();
+  }
+
+  async function initContract() {
+    alert("I sould init the contract!");
   }
 
   async function switchNetwork() {
