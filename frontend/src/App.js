@@ -2,6 +2,7 @@ import { ConnectWallet } from "./components/ConnectWallet";
 import { Navbar } from "./components/Navbar";
 import { PetItem } from "./components/PetItem";
 import { TxError } from "./components/TxError";
+import { TxInfo } from "./components/TxInfo";
 import { WalletNotDetected } from "./components/WalletNotDetected";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
@@ -16,6 +17,7 @@ function App() {
   const [selectedAddress, setSelectedAddress] = useState(undefined);
   const [contract, setContract] = useState(undefined);
   const [txError, setTxError] = useState(undefined);
+  const [txInfo, setTxInfo] = useState(undefined);
 
   useEffect(() => {
     async function fetchPets() {
@@ -42,6 +44,7 @@ function App() {
           setAdoptedPets([]);
           setSelectedAddress(undefined);
           setContract(undefined);
+          setTxInfo(undefined);
           return;
         }
         initializeApp(newAddress);
@@ -95,15 +98,20 @@ function App() {
   async function adoptPet(id) {
     try {
       const tx = await contract.adoptPet(id);
+      setTxInfo(tx.hash);
       const receipt = await tx.wait();
+
+      await new Promise((res) => setTimeout(res, 2000));
 
       if (receipt.status === 0) {
         throw new Error("Transaction Failed!");
       }
-      alert(`Pet with id: ${id} has been adopted!`);
+
       setAdoptedPets([...adoptedPets, id]);
     } catch (e) {
       setTxError(e?.reason);
+    } finally {
+      setTxInfo(undefined);
     }
   }
 
@@ -134,6 +142,7 @@ function App() {
 
   return (
     <div className="container">
+      {txInfo && <TxInfo message={txInfo} />}
       {txError && (
         <TxError dismiss={() => setTxError(undefined)} message={txError} />
       )}
