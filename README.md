@@ -1,6 +1,6 @@
 # Intro
 
-This project let you adopt pet on [Polygon Mumbai](https://mumbai.polygonscan.com/address/0x9DCB0BA7e17db8d45AaC5F30484e22E4175497E0#code) using [Vercel Server]()
+This project let you adopt pet on [Polygon Mumbai](https://mumbai.polygonscan.com/address/0x9DCB0BA7e17db8d45AaC5F30484e22E4175497E0#code) 
 
 
 ## Sample Hardhat Project
