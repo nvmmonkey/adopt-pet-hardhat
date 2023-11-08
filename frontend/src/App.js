@@ -4,12 +4,16 @@ import { PetItem } from "./components/PetItem";
 import { TxError } from "./components/TxError";
 import { WalletNotDetected } from "./components/WalletNotDetected";
 import { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import contractAddress from "./contracts/contract-address-localhost.json";
+import PetAdoptionArtifact from "./contracts/PetAdoption.json";
 
 const HARDHAT_NETWORK_ID = Number(process.env.REACT_APP_NETWORK_ID);
 
 function App() {
   const [pets, setPets] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(undefined);
+  const [contract, setContract] = useState(undefined);
 
   useEffect(() => {
     async function fetchPets() {
@@ -47,10 +51,21 @@ function App() {
   async function initializeApp(address) {
     setSelectedAddress(address);
     const contract = await initContract();
+
+    console.log(contract);
   }
 
   async function initContract() {
-    alert("I sould init the contract!");
+    const provider = new ethers.BrowserProvider(window.ethereum);
+
+    const contract = new ethers.Contract(
+      contractAddress.PetAdoption,
+      PetAdoptionArtifact.abi,
+      await provider.getSigner(0)
+    );
+
+    setContract(contract);
+    return contract;
   }
 
   async function switchNetwork() {
