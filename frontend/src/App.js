@@ -89,6 +89,21 @@ function App() {
     }
   }
 
+  async function adoptPet(id) {
+    try {
+      const tx = await contract.adoptPet(id);
+      const receipt = await tx.wait();
+
+      if (receipt.status === 0) {
+        throw new Error("Transaction Failed!");
+      }
+      alert(`Pet with id: ${id} has been adopted!`);
+      setAdoptedPets([...adoptedPets, id]);
+    } catch (e) {
+      console.error(e.reason);
+    }
+  }
+
   async function switchNetwork() {
     const chainIdHex = `0x${HARDHAT_NETWORK_ID.toString(16)}`;
     return await window.ethereum.request({
@@ -123,7 +138,7 @@ function App() {
 
       <div className="items">
         {pets.map((pet) => (
-          <PetItem key={pet.id} pet={pet} />
+          <PetItem key={pet.id} pet={pet} adoptPet={() => adoptPet(pet.id)} />
         ))}
       </div>
     </div>
