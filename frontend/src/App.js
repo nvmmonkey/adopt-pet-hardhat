@@ -12,9 +12,10 @@ const HARDHAT_NETWORK_ID = Number(process.env.REACT_APP_NETWORK_ID);
 
 function App() {
   const [pets, setPets] = useState([]);
+  const [adoptedPets, setAdoptedPets] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(undefined);
   const [contract, setContract] = useState(undefined);
-  const [adoptedPets, setAdoptedPets] = useState([]);
+  const [txError, setTxError] = useState(undefined);
 
   useEffect(() => {
     async function fetchPets() {
@@ -37,6 +38,7 @@ function App() {
 
       window.ethereum.on("accountsChanged", ([newAddress]) => {
         if (newAddress === undefined) {
+          setTxError(undefined);
           setAdoptedPets([]);
           setSelectedAddress(undefined);
           setContract(undefined);
@@ -78,6 +80,7 @@ function App() {
       const adoptedPets = await contract.getAllAdoptedPets();
 
       if (adoptedPets.length > 0) {
+        console.log(adoptedPets);
         setAdoptedPets(adoptedPets.map((petIdx) => Number(petIdx)));
       } else {
         setAdoptedPets([]);
@@ -85,7 +88,7 @@ function App() {
 
       console.log(adoptedPets);
     } catch (e) {
-      console.error(e);
+      console.error(e.message);
     }
   }
 
@@ -100,7 +103,7 @@ function App() {
       alert(`Pet with id: ${id} has been adopted!`);
       setAdoptedPets([...adoptedPets, id]);
     } catch (e) {
-      console.error(e.reason);
+      setTxError(e?.reason);
     }
   }
 
@@ -131,8 +134,9 @@ function App() {
 
   return (
     <div className="container">
-      <TxError />
-      {JSON.stringify(adoptedPets)}
+      {txError && (
+        <TxError dismiss={() => setTxError(undefined)} message={txError} />
+      )}
       <br />
       <Navbar address={selectedAddress} />
 
