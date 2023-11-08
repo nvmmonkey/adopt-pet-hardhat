@@ -1,4 +1,3 @@
-
 const path = require("path");
 const fs = require("fs");
 
@@ -13,7 +12,13 @@ async function main() {
   const PetAdoption = await hre.ethers.getContractFactory("PetAdoption");
 
   const contract = await PetAdoption.deploy(PETS_COUNT);
+
+  console.log(`PetAdoption deployed to ${contract.target}`);
   await contract.waitForDeployment();
+
+  await run("verify:verify", {
+    address: contract.target,
+  });
 
   console.log(`PetAdoption deployed to ${contract.target}`);
 

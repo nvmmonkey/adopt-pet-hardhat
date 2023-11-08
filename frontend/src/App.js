@@ -6,7 +6,7 @@ import { TxInfo } from "./components/TxInfo";
 import { WalletNotDetected } from "./components/WalletNotDetected";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import contractAddress from "./contracts/contract-address-localhost.json";
+import { contractAddress } from "./address";
 import PetAdoptionArtifact from "./contracts/PetAdoption.json";
 
 const HARDHAT_NETWORK_ID = Number(process.env.REACT_APP_NETWORK_ID);
@@ -117,7 +117,7 @@ function App() {
       setTxInfo(tx.hash);
       const receipt = await tx.wait();
 
-      await new Promise((res) => setTimeout(res, 2000));
+      // await new Promise((res) => setTimeout(res, 2000));
 
       if (receipt.status === 0) {
         throw new Error("Transaction Failed!");
