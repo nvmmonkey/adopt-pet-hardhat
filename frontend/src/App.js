@@ -18,6 +18,11 @@ function App() {
   const [contract, setContract] = useState(undefined);
   const [txError, setTxError] = useState(undefined);
   const [txInfo, setTxInfo] = useState(undefined);
+  const [view, setNewView] = useState("home");
+
+  const setView = (newView) => {
+    setNewView(newView);
+  };
 
   useEffect(() => {
     async function fetchPets() {
@@ -45,6 +50,7 @@ function App() {
           setSelectedAddress(undefined);
           setContract(undefined);
           setTxInfo(undefined);
+          setView("home");
           return;
         }
         initializeApp(newAddress);
@@ -83,13 +89,13 @@ function App() {
       const adoptedPets = await contract.getAllAdoptedPets();
 
       if (adoptedPets.length > 0) {
-        console.log(adoptedPets);
+        // console.log(adoptedPets);
         setAdoptedPets(adoptedPets.map((petIdx) => Number(petIdx)));
       } else {
         setAdoptedPets([]);
       }
 
-      console.log(adoptedPets);
+      // console.log(adoptedPets);
     } catch (e) {
       console.error(e.message);
     }
@@ -147,7 +153,8 @@ function App() {
         <TxError dismiss={() => setTxError(undefined)} message={txError} />
       )}
       <br />
-      <Navbar address={selectedAddress} />
+      {view}
+      <Navbar setView={setView} address={selectedAddress} />
 
       <div className="items">
         {pets.map((pet) => (
